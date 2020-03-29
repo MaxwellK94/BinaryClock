@@ -21,6 +21,8 @@ def setup():
 def loop():
     #testing - display begins on the rightmost side - therefore -1 break in the slice is needed
     #each pin is paired with 1 or 0
+    
+    #display is opposite way round to ouput is printed
     print("hour =",time.localtime().tm_hour%12,"=>",bin(time.localtime().tm_hour%12),tuple(zip_longest(hourPins, [int(isOn) for isOn in bin(time.localtime().tm_hour%12)[:1:-1]],fillvalue=0)))
     print("minute =",time.localtime().tm_min,"=>",bin(time.localtime().tm_min),tuple(zip_longest(minutePins,[int(isOn) for isOn in bin(time.localtime().tm_min)[:1:-1]],fillvalue=0)))
     while True:
@@ -30,11 +32,11 @@ def loop():
         GPIO.output(pmPin, GPIO.HIGH) if time.localtime().tm_hour<=12 else GPIO.output(pmPin, GPIO.LOW)
 
         #set hour LEDs
-        for isOn,led in tuple(zip([int(isOn) for isOn in bin(time.localtime().tm_hour%12)[:1:-1]],hourPins)):
+        for isOn,led in tuple(zip_longest([int(isOn) for isOn in bin(time.localtime().tm_hour%12)[:1:-1]],hourPins, fillvalue=0)):
             GPIO.output(led, GPIO.LOW if isOn else GPIO.HIGH)
 
         #set minute LEDs
-        for isOn,led in tuple(zip([int(isOn) for isOn in bin(time.localtime().tm_min)[:1:-1]],minutePins)):
+        for isOn,led in tuple(zip_longest([int(isOn) for isOn in bin(time.localtime().tm_min)[:1:-1]],minutePins, fillvalue=0)):
             GPIO.output(led,GPIO.LOW if isOn else GPIO.HIGH)
 
 
